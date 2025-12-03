@@ -46,9 +46,9 @@ class DAQ_Move_Lockin_DSP7265(DAQ_Move_base):
     Does not currently support differential measurement.
     """
 
-    _controller_units = 'Hz'
+    _controller_units = ['Hz','V']
     is_multiaxes = True
-    _axis_names = ['OSC']
+    _axis_names = ['Freq','Amp']
     _epsilon = 0.01
     data_actuator_type = DataActuatorType.DataActuator
 
@@ -87,9 +87,12 @@ class DAQ_Move_Lockin_DSP7265(DAQ_Move_base):
         -------
         float: The frequency obtained after scaling conversion.
         """
-        freq = DataActuator(data=self.controller.frequency)
-        freq = self.get_position_with_scaling(freq)
-        return freq
+        if self.axis_value == 'Amp':  # Amp axis
+            val = DataActuator(data=self.controller.voltage)
+        elif self.axis_value == 'Freq':  # Frequency axis
+            val = DataActuator(data=self.controller.frequency)
+        val = self.get_position_with_scaling(val)
+        return val
 
     def close(self) -> None:
         """Terminate the communication protocol"""
@@ -210,7 +213,10 @@ class DAQ_Move_Lockin_DSP7265(DAQ_Move_base):
         """
         f = self.check_bound(f)
         f = self.set_position_with_scaling(f)
-        self.controller.frequency = f.value()
+        if self.axis_value == 'Amp':  # Amp axis
+            self.controller.voltage = f.value()
+        elif self.axis_value == 'Freq':  # Frequency axis
+            self.controller.frequency = f.value()
 
         self.target_value = f
         self.current_value = self.target_value

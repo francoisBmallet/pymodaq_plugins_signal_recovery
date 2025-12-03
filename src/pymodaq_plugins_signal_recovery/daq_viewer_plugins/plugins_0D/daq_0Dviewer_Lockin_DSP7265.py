@@ -44,7 +44,7 @@ class ChannelGroup(GroupParameter):
     def addNew(self) -> None:
         """Add new channel to viewer
         """
-        name_prefix = 'channel'
+        name_prefix = 'DSP7265Ch'
 
         child_indexes = [int(par.name()[len(name_prefix) + 1:])
                          for par in self.children()]
@@ -78,7 +78,7 @@ class DAQ_0DViewer_Lockin_DSP7265(DAQ_Viewer_base):
         {'title': 'VISA Address:', 'name': 'address', 'type': 'list',
          'limits': VISA_RESOURCES},
         {'title': 'ID:', 'name': 'id', 'type': 'str'},
-        {'title': 'Channels:', 'name': 'channels', 'type': 'dsp7270channel'}
+        {'title': 'Channels:', 'name': 'channels', 'type': 'dsp7265channel'}
     ] + comon_parameters
 
     def ini_attributes(self) -> None:
